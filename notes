@@ -1,0 +1,137 @@
+For examples (delmar.umsl.edu)
+   cd ~shultemw/pub/cs4280/{f--yaac, F--.byacc}
+
+JFlex add to PATH -> ~shultemw/bin
+
+prog(type of file) : produced files
+
+flex ( %.l ) : lex.yy.c
+jflex( %.l ) : yylex.java
+
+Internal C
+	extern "C" yylex(void); // in .cpp file
+	extern char yytext[];   // chars in token
+
+.l file structure
+	RE { action } // token definition
+
+	Section 1 - Things need early text that are needed at start of output
+	abbreviations
+	L [A-Za-z]
+	D [0-9]
+	I {D}+
+
+
+int prog()
+{
+   match("program");
+   match(Ident);
+   match("begin");
+   body();
+   match("end");
+}
+
+int stmt()
+{
+	if next_token == Ident
+	{
+		match(Ident);
+		math("=");
+		expr();
+	}
+	else if next_token == If
+	{
+		match(If);
+		expr();
+		match(Then);
+		stmt();
+		match(Fi);
+	}
+	else if next_token == While {}
+	.
+	.
+	.
+	else { error("bad stmt"); }
+
+	
+}
+
+
+
+
+///////////////////////////////
+Action can be of 3 states
+
+
+
+Accept State
+	Finished State
+
+SHIFT STATE 
+	Adds symbols to the stack, then checks state machine for action
+	action symbols S
+
+REDUCE STATE
+	Reduces the symbols on the stack to simpler forms, then checks the state machine for action
+
+	action symbols: R #
+	where # is the production to reduce to
+//////////////////////////////////
+
+/////////////////////////////////
+LR0 (LR Zero) parsing ( )
+
+FLOW dowws the parse work
+
+we use a stack of pairs <stack, symbol>
+                            ^ top most
+
+Initialize the stack < 1. delta >
+
+If current stat ( or TOS) is complete item [Reduce action]                         
+
+we do a reduxe pop as many pairs as on right side of production
+(this uncovers a state #)
+
+PROBLEMS WITH LR-0
+- Does not handle multiple levels of precedance
+- SLR-1 is better
+
+We build the same item sets 
+Then we see a set with 
+a) complete item and incomplete items
+b) several complete items
+
+Thise are conflicts
+a) Shift/ Reduce Conflict
+	Can't tell between shit and reduce
+b) Reduce / Reduce Conflict
+	Can't tell which production to use
+
+/////////////////////////////////////////
+
+/////////////////////////////////////////
+SLR-1
+
+To resolve Reduce
+	If we reduce, the left side goes on the stack, the next token is still there
+	I need something thatmakes sense following the left hand side
+	This is the Follow set from Recursive Descent
+
+in state 3 
+	shift on {"*"}
+	Reduce on Follow(E) = { disjoint,+,) }
+	sets are dusjoint, conflict resolved
+
+How to parse
+	stack of <symbol, state>
+	init stack <V, 1>
+while not(next_token == disjoint)
+	if (next_token in shift (current state))
+		shift (symbol, state determined by old state and symbol)
+	elseif ( next_token in reduce(current state, symbol on Table Of Symbols)
+		pop as many pairs as on RHS of the production
+		push < LHS of production, state(uncovered state and the LHS) >
+	else error in shifting
+
+////////////////////////////////////////

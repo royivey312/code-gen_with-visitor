@@ -1,0 +1,56 @@
+/* == */
+PUSHW 3
+PUSHW 5
+SUBI
+TSTEQI 
+
+/* not= */
+PUSHW 3
+PUSHW 5
+SUBI
+TSTEQI 
+NOTW
+
+/* < */
+PUSHW 3
+PUSHW 5
+SUBI
+TSTLTI
+
+/* >= */
+PUSHW 3
+PUSHW 5
+SUBI
+TSTLTI
+NOTW
+
+/* > */
+PUSHW 3
+PUSHW 5
+SWAPW
+SUBI
+TSTLTI
+
+/* <= */
+PUSHW 3
+PUSHW 5
+SWAPW
+SUBI
+TSTLTI
+NOTW
+
+/* 3 mod 2 = 1 */
+PUSHW 3
+PUSHW 2
+DUPL
+DIVI
+MULI
+SUBI
+
+/* assert true(-1)/false(0) */
+PUSHW -1    /* top of stack is t/f flag */
+NOTW
+RGOZ 1
+HALT
+
+

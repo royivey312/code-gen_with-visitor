@@ -1,0 +1,155 @@
+Context Check
+	Symbol tables 
+		Stack-scopes
+		struct are hard
+
+	Type-checking
+		type checkExpr(tree t)
+		void checkStmt(tree t)
+
+	CheckStmt should allso process decls
+	build Symbol Table (ST)
+____________________
+|      _Decl_       | How do we deal with types?
+|    /        \		|   Let us build a type table
+|Ident_list    Type |    index <--> type
+|___________________|           |
+            ,___________________|
+            |
+____________V_____________
+| 0 | NoType              |
+| 1 | Integer             |
+| 2 | Float               |
+| 3 | Boolean   _______   |        
+|   | struct   |_______|--+------> linked list of
+|___|_____________________|        field types
+
+To compare Types 
+	same type names
+  & for struct, same field type in same order
+
+{in ADA} --> var A, B: array[0,7] of Integer
+                A & B dont have same type
+
+
+ST type 3
+	void doDecl(tree t)
+	{
+		int tpno evalType(tree->second);
+			// Look for type in type table
+			// if found, return index
+			// if not found, then add new entry and return new #
+
+		for all ( ident in t->first ) // linked list
+			check if exists in the same scope=> error
+		else push old decl; enter new info
+	}
+
+PART 4
+
+Code Generation 
+
+We need to allocate space for the variables
+
+(1) Each variable has fixed address
+	 we can think: we have a compiler variable,
+		DP, which is the next available address
+	 for each variable
+
+	 address of the prog variable = DP increase DP by the size of variable
+	 									(# of bytes for that type)
+	 				2bytes			1b
+	 zB. var a, b: integer; c, d: boolean
+	  address
+	  ________
+	 |a  0		db 2
+	 |b  2		db 4
+	 |c  4		db 5
+	 |d  5		db 6
+
+(2) each instance of a variable has space on stack
+	
+	 the variable in a scope form a frame
+	 the real address is in 2 pieces
+
+double in compiler -> 1 offset of var in 2 pieces
+run time thing	   -> 2 start addr of frame on stack
+
+	 new frame each scope change
+
+	 forming the real address in most machines 
+	  is offset from register addressing mode
+
+	  zB. if b is 2 byte frome the frame start
+	  		2(FP)
+
+	  	the run time code must set FP appropriately
+	  	MOV FP, SP
+
+
+generate code
+code patterns
+	a picture or piece that are examples of a nonterminal
+	and place code exit for that stmt
+
+simpiler code is functions(s)
+switches over node typer
+
+genStmt(tree t)
+genExpr(tree t)
+
+zb sum -> sum Plus term
+	pattern 
+	genExpr stmnt
+	genExpr term
+	ADD
+
+void genExpr(tree t)
+{
+	switch (t->name)
+	{
+	  	case PLUS:
+			genExpr(t->first);
+			genExpr(t->second);
+			case(t->type)
+			{
+				Int_Type: output ("ADDI"); break;
+				Float_type: output ("ADDF"); break;
+				default: error
+			}
+		break;
+	}
+}
+
+a = a/b*b + a %b
+
+a%b = a-ab(a/b)
+
+a= b    a
+        b
+a<b sim TSTEQ IF
+
+Code generation
+
+codeExpr(tree t)
+{
+	switch(t->name)
+	{
+		case Plus:
+			codeDef
+			codeR
+			ADD _
+			break
+		case StructRef:
+		addr of field value	{PUSH addr_l, PUSH offset_field, ADD} GET
+	}
+}
+
+
+
+
+
+
+
+
+

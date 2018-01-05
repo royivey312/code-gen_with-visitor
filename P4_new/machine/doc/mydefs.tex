@@ -1,0 +1,81 @@
+%%% Preamble written by William Shoaff
+%%% Style for Notes
+%%% Date January 2, 1989.
+
+\renewcommand{\theenumi}{\arabic{enumi}}
+\renewcommand{\labelenumi}{\arabic{enumi}.}
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{(\alph{enumii})}
+%\renewcommand{\theenumiii}{\roman{enumiii}}
+%\renewcommand{\labelenumiii}{\roman{enumiii})}
+%\renewcommand{\theenumiv}{\arabic{enumiv}}
+%\renewcommand{\labelenumiv}{\arabic{enumiv})}
+
+\newcommand{\fillin}[1]{\makebox[#1]{\hrulefill}}%%% fill in the blank command: \fillin[length]
+
+%%% New Symbols
+
+\newcommand{\cents}{\hbox{\rm\rlap/c}} % the cents symbol
+\newcommand{\norm}[1]{\mid\mid{#1}\mid\mid} 
+	% the norm symbol -- may only be used in math mode
+\newcommand{\abs}[1]{\mid{#1}\mid}
+	% the absolute value symbol -- may only be used in math mode
+\newcommand{\integer}{\hspace*{2pt}\mbox{\tt N}\hspace*{-8pt}
+		\mbox{\tt I}\hspace*{8pt}}	% the set of integers
+\newcommand{\real}{\hspace*{2pt}\mbox{\tt R}\hspace*{-8pt}
+		\mbox{\tt I}\hspace*{8pt}}	% the set of reals
+\newcommand{\floor}{\mbox{\tt floor}} % the floor function
+\newcommand{\gives}{$\rightarrow$}
+\newcommand{\derives}{$\Rightarrow$}
+\def\U#1{\underline{#1}}
+\newcommand{\zB}{\underline{z.B.}}
+
+%%% Page layout
+
+\unitlength=1in
+\marginparwidth=0.7in
+\newcommand{\fullpage}{\oddsidemargin=0pt\textwidth=6.5in
+	\topmargin=0pt\headheight=0pt\headsep=0pt
+	\footskip=0pt \textheight=9in}
+
+%%% Sectioning commands
+
+%\mychapter{\large\bf \thechapter.~#1}{\large\bf~#1}
+%\mysection{section}{\normalsize\bf}{\thesection.~}
+
+%%% New Environments
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\def\endProof{\hspace*{\fill}\vrule height 1em width .5em depth 0em\medskip\par}
+
+% define for proof
+\newenvironment{proof} {{\bf Proof:}}{\endProof\medskip}
+
+% define for definition
+\newenvironment{define} {\tt\medskip\noindent{\bf Definition:}\begin{flushleft}} {\end{flushleft}}
+
+% define for problem
+\newenvironment{problem} {\tt\medskip\noindent{\bf Problem:}\begin{flushleft}} {\end{flushleft}}
+
+% define for lemma
+%\newenvironment{lemma} {\tt\medskip\noindent{\bf Lemma:}\begin{flushleft}} {\end{flushleft}}
+
+% example for examples
+\newenvironment{example} {\tt\medskip\noindent{\bf Example:}\begin{flushleft}} {\end{flushleft}}
+
+% code for pseudocode
+\newenvironment{code} {\medskip\noindent\begin{verbatim}}{\end{verbatim}}
+
+%\def\labelenumi{\Roman{enumi}.}
+%\def\theenumi{\Roman{enumi}}
+%\def\labelenumii{\arabic{enumii}.}
+%\def\theenumii{\arabic{enumii}}
+%\def\p@enumii{\theenumi.}
+%\def\labelenumiii{\alph{enumiii}.}
+%\def\theenumiii{\alph{enumiii}}
+%\def\p@enumiii{\theenumi.\theenumii.}
+%\def\labelenumiv{\arabic{enumiv}.}
+%\def\theenumiv{\arabic{enumiv}}
+%\def\p@enumiv{\p@enumiii.\theenumiii}

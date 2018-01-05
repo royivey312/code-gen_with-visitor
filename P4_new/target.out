@@ -1,0 +1,9 @@
+PUSHW 4
+PUSHW 5
+PUSHW 0
+CGETW 
+
+HALT
+
+
+
