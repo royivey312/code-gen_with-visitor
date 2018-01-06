@@ -19,17 +19,18 @@ using namespace std;
 struct Symbol
 {
     Symbol() {}
-    Symbol(string id, string type, int scopelevel) : id(id)    , type(type)    , scopelevel(scopelevel)     {}
-    Symbol(const Symbol& obj)                      : id(obj.id), type(obj.type), scopelevel(obj.scopelevel) {}
+    Symbol(string id, string type, int scopelevel, int memoryAddr) : id(id)    , type(type)    , scopelevel(scopelevel), memoryAddr(memoryAddr)     {}
+    Symbol(const Symbol& obj)                      : id(obj.id), type(obj.type), scopelevel(obj.scopelevel), memoryAddr(obj.memoryAddr) {}
 
     // Members
     string id;
     string type;
     int scopelevel;
+    int memoryAddr;
 
     friend ostream &operator<<(ostream &os, const Symbol &symbol)
     {
-        os << "id: " << symbol.id << ", type: " << symbol.type << ", Scpl " << symbol.scopelevel;
+        os << "mem: " << symbol.memoryAddr << ", id: " << symbol.id << ", type: " << symbol.type << ", Scpl " << symbol.scopelevel;
         return os;
     }
 };
@@ -217,7 +218,7 @@ private:
         {
 
             Symbol * oldSym = currentTable->lookup(id);
-            Symbol sym{id, string{"record"}, currentTable->scope};
+            Symbol sym{id, string{"record"}, currentTable->scope, 0};
 
             if   ( oldSym == NULL )
                  { currentTable->insert(sym); }
@@ -252,13 +253,13 @@ private:
         //cout << "first kind, name("<< TokName[field_list->kind] << ", " << field_list->name << ") " << endl;
         if (field_list == nullptr) { return syms; }
 
-
         cout.flush();
 
         string id{field_list->first->name};
         string type{field_list->second->name};
 
-        Symbol recSym{id, type, currentTable->scope};
+        Symbol recSym{id, type, currentTable->scope, memCtr};
+        incrementMemCtr(recSym.type);
 
         syms.emplace_back(recSym);
 
@@ -394,13 +395,17 @@ private:
 
     void addSymbols(list<string> idlist, string type)
     {
+        
         for(string id : idlist)
         {
             Symbol * sym = currentTable->lookup(id);
-            Symbol newsym{id, type, currentTable->scope};
+            Symbol newsym{id, type, currentTable->scope, memCtr};
 
             if   ( sym == NULL )
-                 { currentTable->insert( newsym ); }
+                 {
+                    currentTable->insert( newsym );
+                    incrementMemCtr(newsym.type);
+                 }
             else
                  { cout << "Re-Declaration of symbol: <" << *sym
                                                          << "> As <"
@@ -409,6 +414,11 @@ private:
                                                          << endl; }
         }
     }
+
+    void incrementMemCtr(string type) { memCtr += type == "real" ? realMem : intboolMem; }
+    int memCtr = 0;
+    const int realMem    = 8;
+    const int intboolMem = 4;
 };
 
 //#endif //SYMBOL_H
