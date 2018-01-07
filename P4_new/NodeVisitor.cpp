@@ -130,10 +130,20 @@ void NodeVisitor::visit(IntConstE e)
 
 void NodeVisitor::visit(DataAssignE e)
 {
+   NodeElement * it = e.first;
    stringstream ss{};
-   string memAddr{"0"};
 
-   ss << ".DATA " << memAddr << ": " << e.first->name << ": 0W " << endl;
+   ss << ".DATA ";
+
+   while(it != nullptr)
+   {
+      Symbol * var = root->lookup(it->name);
+      string value = var->type == "real" ? "0L" : "0W";
+
+      ss << var->memoryAddr << ": " << var->id << ": " << value << endl;
+      it = it->next;
+   }
+
    ss << ".CODE"  << endl;
 
    cout << ss.str();

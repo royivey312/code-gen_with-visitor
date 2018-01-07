@@ -35,8 +35,6 @@ struct Symbol
     }
 };
 
-
-
 class SymbolTable
 {
     SymbolTable         * parent;
