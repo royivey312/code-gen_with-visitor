@@ -101,10 +101,7 @@ public:
         currentTable = main;
         globalTable  = main;
 
-        cout << endl << "----> Entered Program Scope" << endl;
-
         rbuild(target);
-        cout << "----> Exited Program Scope" << endl;
 
         return globalTable;
     }

@@ -4,6 +4,8 @@
 #include "codespace.h"
 using namespace std;
 
+struct NodeElement;
+
 struct PlusE;
 struct SubE ;
 struct DivE ;
@@ -59,8 +61,10 @@ public:
 class NodeVisitor : public Visitor
 {
 
-	list<codespace> operations;
 	SymbolTable * root;
+	list<codespace> operations;
+	void putVarOnStack(NodeElement *);
+	void operation(NodeElement *);
 public:
 	NodeVisitor(SymbolTable * t);
 	void visit(PlusE       e);

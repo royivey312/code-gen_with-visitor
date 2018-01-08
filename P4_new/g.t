@@ -1,5 +1,6 @@
 var a, b : int;
 
-var c, d : real;
+a := 1;
+b := 2;
 
-a := 32;
+a := (a + b) / a - b * 2;

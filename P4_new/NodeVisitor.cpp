@@ -7,27 +7,81 @@
 
 NodeVisitor::NodeVisitor(SymbolTable * t) : root(t) {}
 
+void NodeVisitor::operation(NodeElement * e)
+{
+   NodeElement * lhs = e->first;
+   NodeElement * rhs = e->second;
+
+   putVarOnStack(lhs);
+   putVarOnStack(rhs);
+}
+
+void NodeVisitor::putVarOnStack(NodeElement * e)
+{
+   if   ( e->name == nullptr ) { dynamic_cast<Element*>(e)->accept(this); }
+   else                          
+   {
+      stringstream ss{};
+      Symbol * sym = root->lookup(e->name);
+      string push{};
+      string get{};
+
+      if   ( sym->type == "real" ) { push = "PUSHL "; get = " GETSL"; }
+      else                         { push = "PUSHW "; get = " GETSW"; }
+
+      ss << push << sym->memoryAddr << get << endl;
+
+      cout << ss.str();
+   }
+}
+
 void NodeVisitor::visit(PlusE      e)
 {
-   cout << "Visit" << endl;
+   stringstream ss{};
+   ss << "/* Addition */" << endl;
 
+   operation(&e);
+
+   ss << "ADDI" << endl;
+   cout << ss.str();
 }
 
 void NodeVisitor::visit(SubE       e)
 {
-   cout << "Visit" << endl;
+   
+   stringstream ss{};
+   ss << "/* Subtraction */" << endl;
+
+   operation(&e);
+
+   ss << "SUBI" << endl;
+   cout << ss.str();
 
 }
 
 void NodeVisitor::visit(DivE       e)
 {
-   cout << "Visit" << endl;
+   
+   stringstream ss{};
+   ss << "/* Division */" << endl;
+
+   operation(&e);
+
+   ss << "DIVI" << endl;
+   cout << ss.str();
 
 }
 
 void NodeVisitor::visit(MulE       e)
 {
-   cout << "Visit" << endl;
+   
+   stringstream ss{};
+   ss << "/* Multiplication */" << endl;
+
+   operation(&e);
+
+   ss << "MULI" << endl;
+   cout << ss.str();
 
 }
 
@@ -86,12 +140,12 @@ void NodeVisitor::visit(LoopE      e)
 
 void NodeVisitor::visit(Assignment e)
 {
-
-   Element * lhs = e.first;
+   NodeElement * lhs = e.first;
+   Symbol * lhSymbol = root->lookup(lhs->name);
    Element * rhs = e.second;
    
    stringstream ss{};
-   ss << "PUSHW " << e.first->name << endl;
+   ss << "PUSHW " << lhSymbol->memoryAddr << endl;
    cout << ss.str();
    ss.str(string{});
 
@@ -118,7 +172,9 @@ void NodeVisitor::visit(NotE e)
 
 void NodeVisitor::visit(RealConstE e)
 {
-   
+   stringstream ss{};
+   ss << "PUSHL " << e.value << endl;
+   cout << ss.str();  
 }
 
 void NodeVisitor::visit(IntConstE e)
@@ -133,7 +189,7 @@ void NodeVisitor::visit(DataAssignE e)
    NodeElement * it = e.first;
    stringstream ss{};
 
-   ss << ".DATA ";
+   ss << ".DATA" << endl;
 
    while(it != nullptr)
    {
