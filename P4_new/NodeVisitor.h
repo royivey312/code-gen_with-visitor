@@ -18,7 +18,9 @@ struct GtE ;
 struct GeE ;
 struct EqE ;
 struct NeE ;
+
 struct IfE ;
+
 struct LoopE;
 struct Assignment;
 struct IntConstE;
@@ -45,7 +47,9 @@ public:
 	virtual void visit(GeE         e) = 0;
 	virtual void visit(EqE         e) = 0;
 	virtual void visit(NeE         e) = 0;
+
 	virtual void visit(IfE         e) = 0;
+
 	virtual void visit(LoopE       e) = 0;
 	virtual void visit(Assignment  e) = 0;
 
@@ -62,6 +66,8 @@ class NodeVisitor : public Visitor
 {
 
 	SymbolTable * root;
+	int labelCtr = (int)*"A";
+	int codeBytesCtr = 0;
 	list<codespace> operations;
 	void putVarOnStack(NodeElement *);
 	void operation(NodeElement *);
@@ -78,7 +84,9 @@ public:
     void visit(GeE         e);
     void visit(EqE         e);
     void visit(NeE         e);
+
     void visit(IfE         e);
+
     void visit(LoopE       e);
     void visit(Assignment  e);
     void visit(IntConstE   e);

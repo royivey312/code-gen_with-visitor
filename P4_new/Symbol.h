@@ -133,7 +133,7 @@ private:
         else if (scope->kind == Else)  { type = "Else";   }
         else if (scope->kind == Then)  { type = "Then";   }
 
-        cout << endl << "----> Entered " << type << " Scope" << endl;
+        //cout << endl << "----> Entered " << type << " Scope" << endl;
 
         SymbolTable * pscope = currentTable;
         SymbolTable * cscope = new SymbolTable{pscope};
@@ -144,10 +144,10 @@ private:
 
         pscope->addChildTable(cscope);
 
-        cout << *cscope;
+        //cout << *cscope;
         currentTable = pscope;
 
-        cout << "----> Exited " << type << " Scope" << endl << endl;
+        //cout << "----> Exited " << type << " Scope" << endl << endl;
 
         if (scope->kind == ElseIf) { rbuild(scope->third); }
     }
@@ -412,8 +412,8 @@ private:
 
     void incrementMemCtr(string type) { memCtr += type == "real" ? realMem : intboolMem; }
     int memCtr = 0;
-    const int realMem    = 8;
-    const int intboolMem = 4;
+    const int realMem    = 4;
+    const int intboolMem = 2;
 };
 
 //#endif //SYMBOL_H

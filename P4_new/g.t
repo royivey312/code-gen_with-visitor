@@ -1,6 +1,13 @@
-var a, b : int;
+var a, b, c, d : int;
 
-a := 1;
-b := 2;
+if 0 = 0 then
+	a := -1;
+else
+	b := -1;
+end if;
 
-a := (a + b) / a - b * 2;
+if 0 = 0 then
+	c  := -1;
+else
+	d  := -1;
+end if;

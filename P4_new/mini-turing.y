@@ -68,7 +68,7 @@ state_decls  : { $$ = NULL;  }
              ;
 
 declaration : Var idlist TAssign type 
-                        { $$ = buildTree(TAssign, $2, $4, NULL); }
+                        { $$ = new DataAssignE( buildTree(TAssign, $2, $4, NULL) ); }
              | Bind Ident To ref      
                         { 
                           $$ = buildTree(Bind, buildStrTree(Ident, idStack.top()), $4, NULL);
@@ -93,7 +93,7 @@ statement    : ref Assign expr
              | Exit When bool_expr
                         { $$ = buildTree(Exit, $3, NULL, NULL); }
              | If bool_expr Then state_decls end_if
-                        { $$ = new IfE(buildTree(If, $2, buildTree(Then, $4, NULL, NULL), $5) ); }
+                        { $$ = new IfE(buildTree(If, $2, $4, $5) ); }
              ;
 
 ref          : Ident { $$ = buildStrTree(Ident, idStack.top()); idStack.pop(); }
