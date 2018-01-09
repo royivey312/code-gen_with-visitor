@@ -73,6 +73,8 @@ class NodeVisitor : public Visitor
 	list<codespace> operations;
 	void putVarOnStack(NodeElement *);
 	void operation(NodeElement *);
+	void generateInnerScope(NodeElement *);
+
 public:
 	NodeVisitor(SymbolTable * t);
 	void visit(PlusE       e);

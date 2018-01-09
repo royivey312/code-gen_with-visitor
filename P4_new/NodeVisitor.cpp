@@ -36,6 +36,23 @@ void NodeVisitor::putVarOnStack(NodeElement * e)
    }
 }
 
+void NodeVisitor::generateInnerScope(NodeElement * e)
+{
+   NodeElement * next = nullptr;
+
+   if (e != nullptr) 
+      {
+         dynamic_cast<Element*>(e)->accept(this);
+         next = e->next;
+      }
+
+   while ( next != nullptr ) 
+         {
+            dynamic_cast<Element*>(next)->accept(this);
+            next = next->next;
+         }
+}
+
 void NodeVisitor::visit(PlusE      e)
 {
    stringstream ss{};
@@ -233,27 +250,28 @@ void NodeVisitor::visit(IfE        e)
    ss.str(string{});
    codeBytesCtr += 4;
 
-   Element * cond     = e.first;
-   Element * then     = e.second->first;
-   Element * elseNode = e.third;
+   Element     * cond     = e.first;
+   NodeElement * then     = e.second->first;
+   NodeElement * elseNode = e.third;
+   NodeElement * next     = nullptr;
 
-   dynamic_cast<Element *>(e.first)->accept(this);
+   cond->accept(this);
 
    ss << "GOZ" << endl;
    cout << ss.str();
    ss.str(string{});
    codeBytesCtr++;
 
-   if (then != nullptr) { then->accept(this); }
+   generateInnerScope(then);
 
    ss << endl << ".DATA" << endl << root->memCtr << ": c" << label << ": " << codeBytesCtr << "Q" << endl
-      << endl << ".CODE"  << endl;
+      << endl << ".CODE" << endl;
 
    root->memCtr += 8;
    cout << ss.str();
    ss.str(string{});
 
-   if( elseNode != nullptr ) { elseNode->accept(this); }
+   generateInnerScope(elseNode);
 
 }
 
