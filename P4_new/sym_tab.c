@@ -40,6 +40,7 @@ int main (int argc, char **argv)
 	}
 	yyparse();
 	fclose(yyin);
+	printTree(root);
 
 	STConstuctor tcon{root};
 	SymbolTable * symtab = tcon.buildSymbolTables();

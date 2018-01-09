@@ -93,7 +93,7 @@ statement    : ref Assign expr
              | Exit When bool_expr
                         { $$ = buildTree(Exit, $3, NULL, NULL); }
              | If bool_expr Then state_decls end_if
-                        { $$ = new IfE(buildTree(If, $2, $4, $5) ); }
+                        { $$ = new IfE(buildTree(If, $2, buildTree(Then, $4, NULL, NULL), $5) ); }
              ;
 
 ref          : Ident { $$ = buildStrTree(Ident, idStack.top()); idStack.pop(); }
@@ -113,9 +113,9 @@ ref          : Ident { $$ = buildStrTree(Ident, idStack.top()); idStack.pop(); }
 end_if       : End If 
                         { $$ = NULL; }
              | Else state_decls End If
-                        { $$ = buildTree(Else, $2, NULL, NULL); }
+                        { $$ = new ElseE ( buildTree(Else, $2, NULL, NULL) ); }
              | ElseIf bool_expr Then state_decls end_if
-                        { $$ = buildTree(ElseIf, $2, $4, $5); }
+                        { $$ = new IfE( buildTree(ElseIf, $2, buildTree(Then, $4, NULL, NULL), $5)); }
              ;
 
 expr         : expr Or and_expr

@@ -39,7 +39,7 @@ void NodeVisitor::putVarOnStack(NodeElement * e)
 void NodeVisitor::visit(PlusE      e)
 {
    stringstream ss{};
-   ss << "/* Addition CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Addition BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -55,7 +55,7 @@ void NodeVisitor::visit(SubE       e)
 {
    
    stringstream ss{};
-   ss << "/* Subtraction CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Subtraction BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -72,7 +72,7 @@ void NodeVisitor::visit(DivE       e)
 {
    
    stringstream ss{};
-   ss << "/* Division CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Division BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -89,7 +89,7 @@ void NodeVisitor::visit(MulE       e)
 {
    
    stringstream ss{};
-   ss << "/* Multiplication CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Multiplication BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -105,7 +105,7 @@ void NodeVisitor::visit(MulE       e)
 void NodeVisitor::visit(ModE       e)
 {
    stringstream ss{};
-   ss << "/* Mod CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Mod BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -124,7 +124,7 @@ void NodeVisitor::visit(ModE       e)
 void NodeVisitor::visit(LtE        e)
 {
    stringstream ss{};
-   ss << "/* Less Than CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Less Than BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -141,7 +141,7 @@ void NodeVisitor::visit(LtE        e)
 void NodeVisitor::visit(LeE        e)
 {
    stringstream ss{};
-   ss << "/* Less Than or Equal CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Less Than or Equal BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -158,7 +158,7 @@ void NodeVisitor::visit(LeE        e)
 void NodeVisitor::visit(GtE        e)
 {
    stringstream ss{};
-   ss << "/* Greater Than CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Greater Than BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -174,7 +174,7 @@ void NodeVisitor::visit(GtE        e)
 void NodeVisitor::visit(GeE        e)
 {
    stringstream ss{};
-   ss << "/* Greater Than or Equal CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Greater Than or Equal BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -191,7 +191,7 @@ void NodeVisitor::visit(GeE        e)
 void NodeVisitor::visit(EqE        e)
 {
    stringstream ss{};
-   ss << "/* Equal Check CS: " << codeBytesCtr << "*/"<< endl;
+   ss << "/* Equal Check BYTE NUM: " << codeBytesCtr << "*/"<< endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -208,7 +208,7 @@ void NodeVisitor::visit(NeE        e)
 {
 
    stringstream ss{};
-   ss << "/* Not Equal Check CS: " << codeBytesCtr << "*/" << endl;
+   ss << "/* Not Equal Check BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    cout << ss.str();
    ss.str(string{});
@@ -224,13 +224,18 @@ void NodeVisitor::visit(NeE        e)
 void NodeVisitor::visit(IfE        e)
 {
    stringstream ss{};
-   string label{ (char)labelCtr++ };
-   ss << "/* If Condition Check CS: " << codeBytesCtr << "*/" << endl;
-   ss << "PUSHW c" << label << " GETSQ" << endl;
 
+   ss << "/* If Condition Check BYTE NUM: " << codeBytesCtr << "*/" << endl;
+
+   string label{ (char)labelCtr++ };
+   ss << "PUSHW c" << label << " GETSQ" << endl;
    cout << ss.str();
    ss.str(string{});
    codeBytesCtr += 4;
+
+   Element * cond     = e.first;
+   Element * then     = e.second->first;
+   Element * elseNode = e.third;
 
    dynamic_cast<Element *>(e.first)->accept(this);
 
@@ -239,9 +244,27 @@ void NodeVisitor::visit(IfE        e)
    ss.str(string{});
    codeBytesCtr++;
 
-   Element * then = e.second;
    if (then != nullptr) { then->accept(this); }
+
+   ss << endl << ".DATA" << endl << root->memCtr << ": c" << label << ": " << codeBytesCtr << "Q" << endl
+      << endl << ".CODE"  << endl;
+
+   root->memCtr += 8;
+   cout << ss.str();
+   ss.str(string{});
+
+   if( elseNode != nullptr ) { elseNode->accept(this); }
+
 }
+
+void NodeVisitor::visit(ElseE       e)
+{
+   stringstream ss{};
+   ss << "/* Else BYTE NUM: " << codeBytesCtr << "*/" << endl;
+   cout << ss.str();
+   if (e.first != nullptr) { dynamic_cast<Element *>(e.first)->accept(this); }
+}
+
 
 void NodeVisitor::visit(LoopE      e)
 {
@@ -250,11 +273,13 @@ void NodeVisitor::visit(LoopE      e)
 
 void NodeVisitor::visit(Assignment e)
 {
+
    NodeElement * lhs = e.first;
    Symbol * lhSymbol = root->lookup(lhs->name);
    Element * rhs = e.second;
    
    stringstream ss{};
+   ss << "/* Assignment BYTE NUM: " << codeBytesCtr << "*/" << endl;
    ss << "PUSHW " << lhSymbol->id << endl;
 
    cout << ss.str();

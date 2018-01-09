@@ -20,6 +20,7 @@ struct EqE ;
 struct NeE ;
 
 struct IfE ;
+struct ElseE;
 
 struct LoopE;
 struct Assignment;
@@ -49,6 +50,7 @@ public:
 	virtual void visit(NeE         e) = 0;
 
 	virtual void visit(IfE         e) = 0;
+	virtual void visit(ElseE       e) = 0;
 
 	virtual void visit(LoopE       e) = 0;
 	virtual void visit(Assignment  e) = 0;
@@ -86,6 +88,7 @@ public:
     void visit(NeE         e);
 
     void visit(IfE         e);
+	void visit(ElseE       e);
 
     void visit(LoopE       e);
     void visit(Assignment  e);

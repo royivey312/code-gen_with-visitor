@@ -42,6 +42,7 @@ class SymbolTable
     list<SymbolTable*>    children{};
 
 public:
+    int memCtr;
     int scope;
     SymbolTable()                    : parent(nullptr), scope(0)                 { }
     SymbolTable(SymbolTable* parent) : parent(parent) , scope(parent->scope + 1) { }
@@ -102,6 +103,8 @@ public:
         globalTable  = main;
 
         rbuild(target);
+
+        globalTable->memCtr = memCtr;
 
         return globalTable;
     }

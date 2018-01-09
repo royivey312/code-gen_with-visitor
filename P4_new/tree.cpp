@@ -109,6 +109,8 @@ void NotE       ::accept(Visitor * v){ v->visit(*this); }
 
 /* If/elseif/else */
 void IfE        ::accept(Visitor * v){ v->visit(*this); }
+void ElseE      ::accept(Visitor * v){ v->visit(*this); }
+
 
 /* Loop */
 void LoopE      ::accept(Visitor * v){ v->visit(*this); }

@@ -45,6 +45,7 @@ struct AndE       : public NodeElement { AndE(tree t)        : NodeElement(*t){}
 
 /* if/elseif/else */
 struct IfE        : public NodeElement { IfE(tree t)         : NodeElement(*t){} void accept(Visitor * v) ; };
+struct ElseE      : public NodeElement { ElseE(tree t)       : NodeElement(*t){} void accept(Visitor * v) ; };
 
 /* loop */
 struct LoopE      : public NodeElement { LoopE(tree t)       : NodeElement(*t){} void accept(Visitor * v) ; };
