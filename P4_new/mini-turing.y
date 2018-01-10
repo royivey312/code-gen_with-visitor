@@ -96,7 +96,7 @@ statement    : ref Assign expr
                         { $$ = new IfE(buildTree(If, $2, buildTree(Then, $4, NULL, NULL), $5) ); }
              ;
 
-ref          : Ident { $$ = buildStrTree(Ident, idStack.top()); idStack.pop(); }
+ref          : Ident { $$ = new VarE(buildStrTree(Ident, idStack.top())); idStack.pop(); }
              | Ident Dot Ident 
                         {
                               char * rhs = idStack.top();

@@ -46,6 +46,8 @@ int main (int argc, char **argv)
 	cout << endl;
 	//cout << *symtab << endl;
 	//printTree(root);	
+	//cout << *symtab << endl;
+
 
 	Visitor * v = new NodeVisitor{symtab};
 	generateByteCode(v, root);

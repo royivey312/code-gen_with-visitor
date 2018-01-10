@@ -119,6 +119,8 @@ void Assignment ::accept(Visitor * v){ v->visit(*this); }
 
 void IntConstE  ::accept(Visitor * v){ v->visit(*this); }
 void RealConstE ::accept(Visitor * v){ v->visit(*this); }
+void VarE       ::accept(Visitor * v){ v->visit(*this); }
 void DataAssignE::accept(Visitor * v){ v->visit(*this); }
+
 
 

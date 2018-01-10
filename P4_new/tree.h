@@ -54,6 +54,7 @@ struct Assignment : public NodeElement { Assignment(tree t)  : NodeElement(*t){}
 
 struct IntConstE  : public NodeElement { IntConstE  (tree t) : NodeElement(*t){} void accept(Visitor * v) ; };
 struct RealConstE : public NodeElement { RealConstE (tree t) : NodeElement(*t){} void accept(Visitor * v) ; };
+struct VarE       : public NodeElement { VarE       (tree t) : NodeElement(*t){} void accept(Visitor * v) ; };
 struct DataAssignE: public NodeElement { DataAssignE(tree t) : NodeElement(*t){} void accept(Visitor * v) ; };
 
 extern char TokName[][15];

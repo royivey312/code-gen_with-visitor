@@ -26,6 +26,8 @@ struct LoopE;
 struct Assignment;
 struct IntConstE;
 struct RealConstE;
+struct VarE;
+
 struct OrE;
 struct AndE;
 struct NotE;
@@ -57,6 +59,7 @@ public:
 
 	virtual void visit(IntConstE   e) = 0;
 	virtual void visit(RealConstE  e) = 0;
+	virtual void visit(VarE        e) = 0;
 
 	virtual void visit(OrE         e) = 0;
 	virtual void visit(AndE        e) = 0;
@@ -68,7 +71,8 @@ class NodeVisitor : public Visitor
 {
 
 	SymbolTable * root;
-	int labelCtr = (int)*"A";
+	int labelCtr     = (int)*"A";
+	int scopeEndLabelCtr = (int)*"A";
 	int codeBytesCtr = 0;
 	list<codespace> operations;
 	void putVarOnStack(NodeElement *);
@@ -94,8 +98,12 @@ public:
 
     void visit(LoopE       e);
     void visit(Assignment  e);
+
     void visit(IntConstE   e);
 	void visit(RealConstE  e);
+	void visit(VarE        e);
+
+
 	void visit(OrE         e);
 	void visit(AndE        e);
 	void visit(NotE        e);

@@ -245,6 +245,7 @@ void NodeVisitor::visit(IfE        e)
    ss << "/* If Condition Check BYTE NUM: " << codeBytesCtr << "*/" << endl;
 
    string label{ (char)labelCtr++ };
+   string endLabel{ (char)scopeEndLabelCtr++ };
    ss << "PUSHW c" << label << " GETSQ" << endl;
    cout << ss.str();
    ss.str(string{});
@@ -264,6 +265,9 @@ void NodeVisitor::visit(IfE        e)
 
    generateInnerScope(then);
 
+   ss << "PUSHW e" << label << " GETSQ GOZ" << endl;
+   codeBytesCtr += 5;
+
    ss << endl << ".DATA" << endl << root->memCtr << ": c" << label << ": " << codeBytesCtr << "Q" << endl
       << endl << ".CODE" << endl;
 
@@ -273,6 +277,12 @@ void NodeVisitor::visit(IfE        e)
 
    generateInnerScope(elseNode);
 
+   ss << endl << ".DATA" << endl << root->memCtr << ": e" << label << ": " << codeBytesCtr << "Q" << endl
+      << endl << ".CODE" << endl;
+
+   root->memCtr += 8;
+
+   cout << ss.str();
 }
 
 void NodeVisitor::visit(ElseE       e)
@@ -287,6 +297,11 @@ void NodeVisitor::visit(ElseE       e)
 void NodeVisitor::visit(LoopE      e)
 {
    cout << "Visit" << endl;
+}
+
+void NodeVisitor::visit(VarE      e)
+{
+   putVarOnStack(dynamic_cast<NodeElement*>(&e));
 }
 
 void NodeVisitor::visit(Assignment e)
@@ -304,11 +319,14 @@ void NodeVisitor::visit(Assignment e)
    ss.str(string{});
    codeBytesCtr += 3;
 
-   rhs->accept(this);
+   if (rhs != nullptr)
+   {
+      rhs->accept(this);
 
-   ss << "PUTSW" << endl;
-   cout << ss.str();
-   codeBytesCtr += 1;
+      ss << "PUTSW" << endl;
+      cout << ss.str();
+      codeBytesCtr += 1;
+   }
 
 }
 

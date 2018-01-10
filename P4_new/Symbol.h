@@ -9,6 +9,7 @@
 #include <ostream>
 #include <list>
 #include <memory>
+#include <iomanip>
 #include "tree.h"
 #include "y.tab.h"
 
@@ -19,18 +20,25 @@ using namespace std;
 struct Symbol
 {
     Symbol() {}
-    Symbol(string id, string type, int scopelevel, int memoryAddr) : id(id)    , type(type)    , scopelevel(scopelevel), memoryAddr(memoryAddr)     {}
-    Symbol(const Symbol& obj)                      : id(obj.id), type(obj.type), scopelevel(obj.scopelevel), memoryAddr(obj.memoryAddr) {}
+    Symbol(string id, string type, int scopelevel, int memoryAddr, int scopelabel) : id(id)    
+                                                                                   , type(type)
+                                                                                   , scopelevel(scopelevel)
+                                                                                   , memoryAddr(memoryAddr)
+                                                                                   , scopelabel(scopelabel)
+                                                                                   {}
+
+    Symbol(const Symbol& obj)                      : id(obj.id), type(obj.type), scopelevel(obj.scopelevel), memoryAddr(obj.memoryAddr), scopelabel(obj.scopelabel) {}
 
     // Members
     string id;
     string type;
     int scopelevel;
     int memoryAddr;
+    int scopelabel;
 
     friend ostream &operator<<(ostream &os, const Symbol &symbol)
     {
-        os << "mem: " << symbol.memoryAddr << ", id: " << symbol.id << ", type: " << symbol.type << ", Scpl " << symbol.scopelevel;
+        os << "mem: 0x" << setfill('0') << setw(3) << symbol.memoryAddr << ", id: " << symbol.id << ", type: " << symbol.type << ", Slevel " << symbol.scopelevel << ", SLabel " << symbol.scopelabel;
         return os;
     }
 };
@@ -42,10 +50,13 @@ class SymbolTable
     list<SymbolTable*>    children{};
 
 public:
+
+
     int memCtr;
     int scope;
-    SymbolTable()                    : parent(nullptr), scope(0)                 { }
-    SymbolTable(SymbolTable* parent) : parent(parent) , scope(parent->scope + 1) { }
+    int scopelabel;
+    SymbolTable()                    : parent(nullptr), scope(0), scopelabel(0)  { }
+    SymbolTable(SymbolTable* parent, int scopelabel) : parent(parent) , scope(parent->scope + 1), scopelabel(scopelabel) { }
 
     void insert       (Symbol sym)          { table[sym.id] = sym; }
     void addChildTable(SymbolTable * child) { children.emplace_back(child); }
@@ -77,10 +88,16 @@ public:
 
     friend ostream &operator<<(ostream &os, const SymbolTable &table)
     {
+        os << "Label:" << table.scopelabel << "Number of Children: " << table.children.size() << endl;
+
         for (auto sym : table.table)
         {
+            if (sym.second.scopelabel != table.scopelabel) { continue; }
             os << "symbol: <" << sym.second << ">" << endl;
         }
+
+        for(auto * child : table.children) { os << *child; }
+
         return os;
     }
 };
@@ -89,6 +106,7 @@ public:
 
 class STConstuctor
 {
+    int scopeCtr = 1;
     tree target;
     SymbolTable * globalTable;
     SymbolTable * currentTable;
@@ -139,7 +157,7 @@ private:
         //cout << endl << "----> Entered " << type << " Scope" << endl;
 
         SymbolTable * pscope = currentTable;
-        SymbolTable * cscope = new SymbolTable{pscope};
+        SymbolTable * cscope = new SymbolTable{pscope, scopeCtr++};
 
         currentTable = cscope;
 
@@ -216,7 +234,7 @@ private:
         {
 
             Symbol * oldSym = currentTable->lookup(id);
-            Symbol sym{id, string{"record"}, currentTable->scope, 0};
+            Symbol sym{id, string{"record"}, currentTable->scope, 0, currentTable->scopelabel};
 
             if   ( oldSym == NULL )
                  { currentTable->insert(sym); }
@@ -256,7 +274,7 @@ private:
         string id{field_list->first->name};
         string type{field_list->second->name};
 
-        Symbol recSym{id, type, currentTable->scope, memCtr};
+        Symbol recSym{id, type, currentTable->scope, memCtr, currentTable->scopelabel};
         incrementMemCtr(recSym.type);
 
         syms.emplace_back(recSym);
@@ -397,7 +415,7 @@ private:
         for(string id : idlist)
         {
             Symbol * sym = currentTable->lookup(id);
-            Symbol newsym{id, type, currentTable->scope, memCtr};
+            Symbol newsym{id, type, currentTable->scope, memCtr, currentTable->scopelabel};
 
             if   ( sym == NULL )
                  {
