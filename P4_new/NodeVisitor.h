@@ -71,15 +71,18 @@ class NodeVisitor : public Visitor
 {
 
 	SymbolTable * root;
-	int labelCtr     = (int)*"A";
+	int labelCtr         = (int)*"A";
 	int scopeEndLabelCtr = (int)*"A";
-	int codeBytesCtr = 0;
+	int codeBytesCtr     = 0;
 	list<codespace> operations;
 	void putVarOnStack(NodeElement *);
 	void operation(NodeElement *);
 	void generateInnerScope(NodeElement *);
 
 public:
+
+	stringstream codeStream{}, dataStream{};
+
 	NodeVisitor(SymbolTable * t);
 	void visit(PlusE       e);
     void visit(SubE        e);

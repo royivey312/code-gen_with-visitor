@@ -1,0 +1,99 @@
+/* Input  File            : Conditionals.t */
+/* Output File (this file):          out.s */
+
+.DATA
+0: a: 0W
+2: b: 0W
+4: A: 50Q
+12: B: 50Q
+18: C: 81Q
+26: D: 93Q
+32: E: 140Q
+40: G: 170Q
+48: H: 177Q
+54: F: 177Q
+
+.CODE
+/* Assignment BYTE NUM: 0*/
+PUSHW a
+PUSHW 16
+PUTSW
+/* Assignment BYTE NUM: 7*/
+PUSHW b
+PUSHW 8
+PUTSW
+/* If Condition Check BYTE NUM: 14*/
+PUSHW A GETSQ
+/* Greater Than BYTE NUM: 18*/
+PUSHW a GETSW
+PUSHW b GETSW
+SWAPW SUBI TSTLTI
+GOZ
+/* Assignment BYTE NUM: 30*/
+PUSHW a
+/* Subtraction BYTE NUM: 33*/
+PUSHW a GETSW
+PUSHW 8
+SUBI
+PUTSW
+PUSHW B GETSQ PUSHW -1 GOZ
+/* If Condition Check BYTE NUM: 50*/
+PUSHW C GETSQ
+/* Less Than BYTE NUM: 54*/
+PUSHW a GETSW
+PUSHW b GETSW
+SUBI TSTLTI
+GOZ
+/* Assignment BYTE NUM: 65*/
+PUSHW a
+PUSHW b GETSW
+PUTSW
+PUSHW D GETSQ PUSHW -1 GOZ
+/* Else BYTE NUM: 81*/
+/* Assignment BYTE NUM: 81*/
+PUSHW a
+/* Subtraction BYTE NUM: 84*/
+PUSHW a GETSW
+PUSHW 1
+SUBI
+PUTSW
+/* If Condition Check BYTE NUM: 93*/
+PUSHW E GETSQ
+/* Equal Check BYTE NUM: 97*/
+PUSHW a GETSW
+PUSHW b GETSW
+SUBI TSTEQI
+GOZ
+/* Assignment BYTE NUM: 108*/
+PUSHW a
+/* Subtraction BYTE NUM: 111*/
+PUSHW a GETSW
+PUSHW 1
+SUBI
+PUTSW
+/* Assignment BYTE NUM: 120*/
+PUSHW b
+/* Addition BYTE NUM: 123*/
+PUSHW b GETSW
+PUSHW 1
+ADDI
+PUTSW
+PUSHW F GETSQ PUSHW -1 GOZ
+/* If Condition Check BYTE NUM: 140*/
+PUSHW G GETSQ
+/* Less Than BYTE NUM: 144*/
+PUSHW a GETSW
+PUSHW b GETSW
+SUBI TSTLTI
+GOZ
+/* Assignment BYTE NUM: 155*/
+PUSHW a
+PUSHW 32
+PUTSW
+PUSHW H GETSQ PUSHW -1 GOZ
+/* Else BYTE NUM: 170*/
+/* Assignment BYTE NUM: 170*/
+PUSHW b
+PUSHW 0
+PUTSW
+
