@@ -34,5 +34,5 @@ mini-turing.tab.c: mini-turing.y
 mini-turing.tab.h: mini-turing.tab.c
 
 clean: 
-	$(RM) *.o lex.yy.c scan mini-turing.tab.* mini-turing.output test turing-tree turing-symtab
+	$(RM) *.o lex.yy.c scan mini-turing.tab.* mini-turing.output test turing-tree turing-symtab turing
 

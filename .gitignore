@@ -1,2 +1,7 @@
 notes/*
 *.[oa]
+
+*/scan
+*/parse
+*/turing
+*/lex.yy.c
