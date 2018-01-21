@@ -1,6 +1,5 @@
 // NodeVisitor.cpp
 #include "NodeVisitor.h"
-#include "codespace.h"
 #include "tree.h"
 #include "y.tab.h"
 #include "Symbol.h"

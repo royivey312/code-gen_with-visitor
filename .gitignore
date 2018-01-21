@@ -12,3 +12,4 @@ P4_new/*.tab*
 */turing
 */lex.yy.c
 */turing-tree
+*/machine

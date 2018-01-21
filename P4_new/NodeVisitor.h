@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
+#include <sstream>
 #include <list>
-#include "codespace.h"
 using namespace std;
 
 struct NodeElement;
@@ -74,7 +74,7 @@ class NodeVisitor : public Visitor
 	int labelCtr         = (int)*"A";
 	int scopeEndLabelCtr = (int)*"A";
 	int codeBytesCtr     = 0;
-	list<codespace> operations;
+
 	void putVarOnStack(NodeElement *);
 	void operation(NodeElement *);
 	void generateInnerScope(NodeElement *);
