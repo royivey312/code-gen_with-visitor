@@ -1,7 +1,14 @@
 notes/*
 *.[oa]
 
+*.output
+P2/*.tab*
+P3/*.tab*
+P4/*.tab*
+P4_new/*.tab*
+
 */scan
 */parse
 */turing
 */lex.yy.c
+*/turing-tree
