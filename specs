@@ -1,0 +1,27 @@
+
+**************************** TECHNICAL SPECIFICATIONS ****************************
+
+COMPILER IMPLEMENTATION LANGUAGE: C++ 11
+
+LANGUAGE BEING COMPILED         : mini-turing (sub-set of turing)
+
+BYTECODE TARGET MACHINE         : Schulte's Machine ( written by Micheal Schulte, UMSL )
+
+SUPPORTING PROGRAMS: 
+
+	flex:
+		lexigraphical analysis
+
+	bison:
+	 	language definition to enable parsing
+
+
+SAMPLE INPUT FILES:
+
+	Operations.t
+		File contains all currently supported operations in mini-turing.
+
+	Conditionals.t
+		File contains all currently supported conditional statements and usages in mini-turing.
+
+**********************************************************************************
